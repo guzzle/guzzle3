@@ -1,7 +1,8 @@
 Guzzle, PHP HTTP client and webservice framework
 ================================================
 
-[![Latest Stable Version](https://poser.pugx.org/guzzle/guzzle/version.png)](https://packagist.org/packages/guzzle/guzzle) [![Composer Downloads](https://poser.pugx.org/guzzle/guzzle/d/total.png)](https://packagist.org/packages/guzzle/guzzle) [![Build Status](https://secure.travis-ci.org/guzzle/guzzle.png?branch=master)](http://travis-ci.org/guzzle/guzzle)
+[![Composer Downloads](https://poser.pugx.org/guzzle/guzzle/d/total.png)](https://packagist.org/packages/guzzle/guzzle)
+ [![Build Status](https://secure.travis-ci.org/guzzle/guzzle3.png?branch=master)](http://travis-ci.org/guzzle/guzzle3)
 
 Guzzle is a PHP HTTP client and framework for building RESTful web service clients.
 
