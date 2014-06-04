@@ -13,7 +13,4 @@ $classLoader->registerNamespaces(array(
 ));
 $classLoader->register();
 
-// Copy the cacert.pem file from the phar if it is not in the temp folder.
-\Guzzle\Http\Client::extractPharCacert('phar://guzzle.phar/src/Guzzle/Http/Resources/cacert.pem');
-
 __HALT_COMPILER();

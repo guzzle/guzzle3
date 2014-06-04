@@ -449,6 +449,9 @@ class Client extends AbstractHasDispatcher implements ClientInterface
 
         if ($authority === true && substr(__FILE__, 0, 7) == 'phar://') {
             $authority = sys_get_temp_dir() . '/guzzle-cacert.pem';
+            if (!file_exists($authority)) {
+                self::extractPharCacert(__DIR__ . '/Resources/cacert.pem');
+            }
         }
 
         $this->setSslVerification($authority);
