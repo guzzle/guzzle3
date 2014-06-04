@@ -487,4 +487,35 @@ class Client extends AbstractHasDispatcher implements ClientInterface
     {
         return sys_get_temp_dir() . '/guzzle-cacert.pem';
     }
+
+    /**
+     * Copies the phar cacert from a phar into the temp directory.
+     *
+     * @param string $pharCacertPath Path to the phar cacert. For example:
+     *                               'phar://aws.phar/Guzzle/Http/Resources/cacert.pem'
+     *
+     * @throws \RuntimeException Throws if the phar cacert cannot be found or
+     *                           the file cannot be copied to the temp dir.
+     */
+    public static function extractPharCacert($pharCacertPath)
+    {
+        // Copy the cacert.pem file from the phar if it is not in the temp
+        // folder.
+        $from = $pharCacertPath;
+        $certFile = sys_get_temp_dir() . '/guzzle-cacert.pem';
+
+        if (!file_exists($from)) {
+            throw new \RuntimeException('Could not find ' . $pharCacertPath);
+        }
+
+        // Only copy when the file size is different
+        if (!file_exists($certFile) || filesize($certFile) != filesize($from)) {
+            if (!copy($from, $certFile)) {
+                throw new \RuntimeException(
+                    "Could not copy {$from} to {$certFile}: "
+                    . var_export(error_get_last(), true)
+                );
+            }
+        }
+    }
 }

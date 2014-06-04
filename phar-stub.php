@@ -14,15 +14,6 @@ $classLoader->registerNamespaces(array(
 $classLoader->register();
 
 // Copy the cacert.pem file from the phar if it is not in the temp folder.
-$from = 'phar://guzzle.phar/src/Guzzle/Http/Resources/cacert.pem';
-$certFile = sys_get_temp_dir() . '/guzzle-cacert.pem';
-
-// Only copy when the file size is different
-if (!file_exists($certFile) || filesize($certFile) != filesize($from)) {
-    if (!copy($from, $certFile)) {
-        throw new RuntimeException("Could not copy {$from} to {$certFile}: "
-            . var_export(error_get_last(), true));
-    }
-}
+\Guzzle\Http\Client::extractPharCacert('phar://guzzle.phar/src/Guzzle/Http/Resources/cacert.pem');
 
 __HALT_COMPILER();
