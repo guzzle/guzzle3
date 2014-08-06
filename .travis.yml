@@ -17,7 +17,8 @@ before_script:
   - echo "extension=http.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - pecl install uri_template-beta
   - phpenv rehash
-  - composer install --dev
+  - composer self-update
+  - composer install --no-interaction --prefer-source --dev
   - echo 'Ensuring the correct version of node is running'
   - ~/.nvm/nvm.sh install v0.6.14
 
