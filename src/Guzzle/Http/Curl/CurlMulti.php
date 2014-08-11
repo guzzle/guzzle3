@@ -7,6 +7,8 @@ use Guzzle\Common\Event;
 use Guzzle\Http\Exception\MultiTransferException;
 use Guzzle\Http\Exception\CurlException;
 use Guzzle\Http\Message\RequestInterface;
+use Guzzle\Http\Message\EntityEnclosingRequestInterface;
+use Guzzle\Http\Exception\RequestException;
 
 /**
  * Send {@see RequestInterface} objects in parallel using curl_multi
@@ -294,11 +296,16 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         $this->removeHandle($request);
 
         if (!$curlException) {
-
-            $state = $request->setState(RequestInterface::STATE_COMPLETE, array('handle' => $handle));
-            // Only remove the request if it wasn't resent as a result of the state change
-            if ($state != RequestInterface::STATE_TRANSFER) {
-                $this->remove($request);
+            if ($this->validateResponseWasSet($request)) {
+                $state = $request->setState(
+                    RequestInterface::STATE_COMPLETE,
+                    array('handle' => $handle)
+                );
+                // Only remove the request if it wasn't resent as a result of
+                // the state change
+                if ($state != RequestInterface::STATE_TRANSFER) {
+                    $this->remove($request);
+                }
             }
             return;
         }
@@ -373,5 +380,44 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
                 : 'Unexpected cURL error: ' . $code
             );
         }
+    }
+
+    /**
+     * @link https://github.com/guzzle/guzzle/issues/710
+     */
+    private function validateResponseWasSet(RequestInterface $request)
+    {
+        if ($request->getResponse()) {
+            return true;
+        }
+
+        $body = $request instanceof EntityEnclosingRequestInterface
+            ? $request->getBody()
+            : null;
+
+        if (!$body) {
+            $rex = new RequestException(
+                'No response was received for a request with no body. This'
+                . ' could mean that you are saturating your network.'
+            );
+            $rex->setRequest($request);
+            $this->removeErroredRequest($request, $rex);
+        } elseif (!$body->isSeekable() || !$body->seek(0)) {
+            // Nothing we can do with this. Sorry!
+            $rex = new RequestException(
+                'The connection was unexpectedly closed. The request would'
+                . ' have been retried, but attempting to rewind the'
+                . ' request body failed.'
+            );
+            $rex->setRequest($request);
+            $this->removeErroredRequest($request, $rex);
+        } else {
+            $this->remove($request);
+            // Add the request back to the batch to retry automatically.
+            $this->requests[] = $request;
+            $this->addHandle($request);
+        }
+
+        return false;
     }
 }
