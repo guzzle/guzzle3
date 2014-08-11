@@ -504,14 +504,14 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         // folder.
         $certFile = sys_get_temp_dir() . '/guzzle-cacert.pem';
 
-        if (!file_exists($certFile)) {
-            if (!file_exists($pharCacertPath)) {
-                throw new \RuntimeException("Could not find $pharCacertPath");
-            }
-            // Only copy when the file size is different
-            if (filesize($certFile) != filesize($pharCacertPath)
-                && !copy($pharCacertPath, $certFile)
-            ) {
+        if (!file_exists($pharCacertPath)) {
+            throw new \RuntimeException("Could not find $pharCacertPath");
+        }
+
+        if (!file_exists($certFile) ||
+            filesize($certFile) != filesize($pharCacertPath)
+        ) {
+            if (!copy($pharCacertPath, $certFile)) {
                 throw new \RuntimeException(
                     "Could not copy {$pharCacertPath} to {$certFile}: "
                     . var_export(error_get_last(), true)

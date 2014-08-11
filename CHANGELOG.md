@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+3.9.2 (2014-09-10)
+------------------
+
+* Retrying "Connection died, retrying a fresh connect" curl errors.
+* Automatically extracting the cacert from the phar in client constructor.
+* Added EntityBody support for OPTIONS requests.
+
 3.9.1 (2014-05-07)
 ------------------
 
