@@ -157,11 +157,10 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         try {
             $state = $request->setState(RequestInterface::STATE_TRANSFER);
             if ($state == RequestInterface::STATE_TRANSFER) {
-                // Add the request curl handle to the multi handle
-                $handle = $this->createCurlHandle($request)->getHandle();
-                $this->checkCurlResult(curl_multi_add_handle($this->multiHandle, $handle));
+                $this->addHandle($request);
             } else {
-                // Requests might decide they don't need to be sent just before transfer (e.g. CachePlugin)
+                // Requests might decide they don't need to be sent just before
+                // transfer (e.g. CachePlugin)
                 $this->remove($request);
                 if ($state == RequestInterface::STATE_COMPLETE) {
                     $this->successful[] = $request;
@@ -171,6 +170,14 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
             // Queue the exception to be thrown when sent
             $this->removeErroredRequest($request, $e);
         }
+    }
+
+    private function addHandle(RequestInterface $request)
+    {
+        $handle = $this->createCurlHandle($request)->getHandle();
+        $this->checkCurlResult(
+            curl_multi_add_handle($this->multiHandle, $handle)
+        );
     }
 
     /**
@@ -287,23 +294,26 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
         $this->removeHandle($request);
 
         if (!$curlException) {
+
             $state = $request->setState(RequestInterface::STATE_COMPLETE, array('handle' => $handle));
             // Only remove the request if it wasn't resent as a result of the state change
             if ($state != RequestInterface::STATE_TRANSFER) {
                 $this->remove($request);
             }
-        } else {
-            // Set the state of the request to an error
-            $state = $request->setState(RequestInterface::STATE_ERROR, array('exception' => $curlException));
-            // Allow things to ignore the error if possible
-            if ($state != RequestInterface::STATE_TRANSFER) {
-                $this->remove($request);
-            }
-            // The error was not handled, so fail
-            if ($state == RequestInterface::STATE_ERROR) {
-                /** @var CurlException $curlException */
-                throw $curlException;
-            }
+            return;
+        }
+
+        // Set the state of the request to an error
+        $state = $request->setState(RequestInterface::STATE_ERROR, array('exception' => $curlException));
+        // Allow things to ignore the error if possible
+        if ($state != RequestInterface::STATE_TRANSFER) {
+            $this->remove($request);
+        }
+
+        // The error was not handled, so fail
+        if ($state == RequestInterface::STATE_ERROR) {
+            /** @var CurlException $curlException */
+            throw $curlException;
         }
     }
 
