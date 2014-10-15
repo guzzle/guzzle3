@@ -38,3 +38,17 @@ After installing, you need to require Composer's autoloader:
 ```php
 require 'vendor/autoload.php';
 ```
+## Known Issues
+
+1. Problem following a specific redirect: https://github.com/guzzle/guzzle/issues/385.
+   This has been fixed in Guzzle 4/5.
+2. Root XML attributes not serialized in a service description: https://github.com/guzzle/guzzle3/issues/5.
+   This has been fixed in Guzzle 4/5.
+3. Accept-Encoding not preserved when following redirect: https://github.com/guzzle/guzzle3/issues/9
+   Fixed in Guzzle 4/5.
+4. String "Array" Transmitted w/ PostFiles and Duplicate Aggregator: https://github.com/guzzle/guzzle3/issues/10
+   Fixed in Guzzle 4/5.
+5. Recursive model references with array items: https://github.com/guzzle/guzzle3/issues/13
+   Fixed in Guzzle 4/5
+6. String "Array" Transmitted w/ PostFiles and Duplicate Aggregator: https://github.com/guzzle/guzzle3/issues/10
+   Fixed in Guzzle 4/5.
