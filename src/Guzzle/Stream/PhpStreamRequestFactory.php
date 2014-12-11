@@ -259,11 +259,11 @@ class PhpStreamRequestFactory implements StreamRequestFactoryInterface
     {
         $errors = null;
         set_error_handler(function ($_, $msg, $file, $line) use (&$errors) {
-            $errors[] = [
+            $errors[] = array(
                 'message' => $msg,
                 'file'    => $file,
                 'line'    => $line
-            ];
+            );
             return true;
         });
         $resource = call_user_func($callback);
