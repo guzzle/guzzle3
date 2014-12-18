@@ -32,22 +32,15 @@ class ReadLimitEntityBody extends AbstractEntityBodyDecorator
      */
     public function __toString()
     {
-        // If the body implements the StreamInterface use a memory optimised read
-		if ($this->body instanceof StreamInterface)
-		{
-			if (!$this->body->isReadable() || (!$this->body->isSeekable() && $this->body->isConsumed())) {
-				return '';
-			}
+        if (!$this->body->isReadable() || (!$this->body->isSeekable() && $this->body->isConsumed())) {
+            return '';
+        }
 
-			$originalPos = $this->body->ftell();
-			$data = stream_get_contents($this->body->getStream(), $this->limit, $this->offset);
-			$this->body->seek($originalPos);
+        $originalPos = $this->body->ftell();
+        $data = stream_get_contents($this->body->getStream(), $this->limit, $this->offset);
+        $this->body->seek($originalPos);
 
-			return (string) $data ?: '';
-		}
-
-		// In any other case return a subset of the decorated entity body
-        return substr((string) $this->body, $this->offset, $this->limit) ?: '';
+        return (string) $data ?: '';
     }
 
     public function isConsumed()
