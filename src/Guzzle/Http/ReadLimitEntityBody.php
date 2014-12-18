@@ -37,7 +37,8 @@ class ReadLimitEntityBody extends AbstractEntityBodyDecorator
         }
 
         $originalPos = $this->body->ftell();
-        $data = stream_get_contents($this->body->getStream(), $this->limit, $this->offset);
+        $this->body->seek($this->offset);
+        $data = $this->read($this->limit);
         $this->body->seek($originalPos);
 
         return (string) $data ?: '';
