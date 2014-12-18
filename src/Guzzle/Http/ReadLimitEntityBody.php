@@ -32,13 +32,18 @@ class ReadLimitEntityBody extends AbstractEntityBodyDecorator
      */
     public function __toString()
     {
-        if (!$this->body->isReadable() || (!$this->body->isSeekable() && $this->body->isConsumed())) {
+        if (!$this->body->isReadable() ||
+            (!$this->body->isSeekable() && $this->body->isConsumed())
+        ) {
             return '';
         }
 
         $originalPos = $this->body->ftell();
         $this->body->seek($this->offset);
-        $data = $this->read($this->limit);
+        $data = '';
+        while (!$this->feof()) {
+            $data .= $this->read(1048576);
+        }
         $this->body->seek($originalPos);
 
         return (string) $data ?: '';
