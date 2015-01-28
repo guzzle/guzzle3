@@ -3,11 +3,14 @@ Guzzle, PHP HTTP client and webservice framework
 
 # This is an old version of Guzzle
 
-This repository is for Guzzle 3.x. Guzzle 4.x, the new version of Guzzle, has
+This repository is for Guzzle 3.x. Guzzle 5.x, the new version of Guzzle, has
 been released and is available at
 [https://github.com/guzzle/guzzle](https://github.com/guzzle/guzzle). The
-documentation for Guzzle version 4+ can be found at
+documentation for Guzzle version 5+ can be found at
 [http://guzzlephp.org](http://guzzlephp.org).
+
+Guzzle 3 is only maintained for bug and security fixes. Guzzle 3 will be EOL
+at some point in late 2015.
 
 ### About Guzzle 3
 
