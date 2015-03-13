@@ -41,7 +41,7 @@ class ExceptionCollection extends \Exception implements GuzzleException, \Iterat
      *
      * @param ExceptionCollection|\Exception $e Exception to add
      *
-     * @return ExceptionCollection;
+     * @return ExceptionCollection
      */
     public function add($e)
     {
