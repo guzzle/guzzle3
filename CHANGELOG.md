@@ -1,11 +1,11 @@
 # CHANGELOG
 
-## 3.9.3 - Unreleased
+## 3.9.3 - 2015-03-18
 
+* Ensuring Content-Length is not stripped from a request when it is `0`.
 * Added more information to stream wrapper exceptions.
 * Message parser will no longer throw warnings for malformed messages.
 * Giving a valid cache TTL when max-age is 0.
-* Updated CA bundle.
 
 ## 3.9.2 - 2014-09-10
 
