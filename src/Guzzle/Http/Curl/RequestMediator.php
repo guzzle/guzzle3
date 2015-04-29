@@ -44,6 +44,7 @@ class RequestMediator
         if (strpos($header, 'HTTP/') === 0) {
 
             $startLine = explode(' ', $header, 3);
+            list($protocol, $version) = explode('/', trim($startLine[0]));
             $code = $startLine[1];
             $status = isset($startLine[2]) ? $startLine[2] : '';
 
@@ -56,6 +57,7 @@ class RequestMediator
             }
 
             $response = new Response($code, null, $body);
+            $response->setProtocol($protocol, $version);
             $response->setStatus($code, $status);
             $this->request->startResponse($response);
 
