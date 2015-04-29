@@ -116,7 +116,7 @@ options of a client.
     $client = new Guzzle\Http\Client('http://www.test.com', array(
         'request.params' => array(
             'cache.override_ttl' => 3600,
-            'params.cache.revalidate' => 'never'
+            'cache.revalidate' => 'never'
         )
     ));
 
