@@ -28,7 +28,7 @@ class CompositeFactory implements \IteratorAggregate, \Countable, FactoryInterfa
         }
         $factories[] = new ConcreteClassFactory($client);
 
-        return new self($factories);
+        return new static($factories);
     }
 
     /**
