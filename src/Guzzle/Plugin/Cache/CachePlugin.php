@@ -230,11 +230,12 @@ class CachePlugin implements EventSubscriberInterface
         $responseAge = $response->calculateAge();
         $reqc = $request->getHeader('Cache-Control');
         $resc = $response->getHeader('Cache-Control');
+        $valid = true;
 
         // Check the request's max-age header against the age of the response
         if ($reqc && $reqc->hasDirective('max-age') &&
             $responseAge > $reqc->getDirective('max-age')) {
-            return false;
+            $valid = false;
         }
 
         // Check the response's max-age header
@@ -242,16 +243,16 @@ class CachePlugin implements EventSubscriberInterface
             $maxStale = $reqc ? $reqc->getDirective('max-stale') : null;
             if (null !== $maxStale) {
                 if ($maxStale !== true && $response->getFreshness() < (-1 * $maxStale)) {
-                    return false;
+                    $valid = false;
                 }
             } elseif ($resc && $resc->hasDirective('max-age')
                 && $responseAge > $resc->getDirective('max-age')
             ) {
-                return false;
+                $valid = false;
             }
         }
 
-        if ($this->revalidation->shouldRevalidate($request, $response)) {
+        if (!$valid && $this->revalidation->shouldRevalidate($request, $response)) {
             try {
                 return $this->revalidation->revalidate($request, $response);
             } catch (CurlException $e) {
@@ -260,7 +261,7 @@ class CachePlugin implements EventSubscriberInterface
             }
         }
 
-        return true;
+        return $valid;
     }
 
     /**
