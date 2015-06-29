@@ -42,7 +42,7 @@ to provide the path to their configuration data.
     )));
 
 The above code registers a service builder that can be used throughout your unit tests.  You would then be able to
-retrieve an instantiated and configured Unfuddle client by calling ``$this->getServiceBuilder()->get('test.unfuddle)``.
+retrieve an instantiated and configured Unfuddle client by calling ``$this->getServiceBuilder()->get('test.unfuddle')``.
 The above code assumes that ``$_SERVER['CONFIG']`` contains the path to a file that stores service description
 configuration.
 
