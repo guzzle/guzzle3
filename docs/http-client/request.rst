@@ -60,10 +60,10 @@ option of a request:
 .. code-block:: php
 
     // Send the response body to a file
-    $request = $client->get('http://test.com', array(), array('save_to' => '/path/to/file'));
+    $request = $client->get('http://test.com', array('save_to' => '/path/to/file'));
 
     // Send the response body to an fopen resource
-    $request = $client->get('http://test.com', array(), array('save_to' => fopen('/path/to/file', 'w')));
+    $request = $client->get('http://test.com', array('save_to' => fopen('/path/to/file', 'w')));
 
 HEAD requests
 ~~~~~~~~~~~~~
