@@ -117,7 +117,7 @@ class DefaultCacheStorageTest extends \Guzzle\Tests\GuzzleTestCase
         $this->assertFalse(in_array('test', $this->readAttribute($cache['cache'], 'data')));
         $this->assertFalse(in_array($cache['serialized'], $this->readAttribute($cache['cache'], 'data')));
         $this->assertEquals(
-            array('DoctrineNamespaceCacheKey[]'),
+            array(),
             array_keys($this->readAttribute($cache['cache'], 'data'))
         );
     }
