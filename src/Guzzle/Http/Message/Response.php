@@ -791,10 +791,10 @@ class Response extends AbstractMessage implements \Serializable
         if ($header = $this->getHeader('Cache-Control')) {
             // s-max-age, then max-age, then Expires
             if ($age = $header->getDirective('s-maxage')) {
-                return $age;
+                return intval($age);
             }
             if ($age = $header->getDirective('max-age')) {
-                return $age;
+                return intval($age);
             }
         }
 
@@ -808,7 +808,7 @@ class Response extends AbstractMessage implements \Serializable
     /**
      * Check if the response is considered fresh.
      *
-     * A response is considered fresh when its age is less than or equal to the freshness lifetime (maximum age) of the
+     * A response is considered fresh when its age is less than the freshness lifetime (maximum age) of the
      * response.
      *
      * @return bool|null
@@ -817,7 +817,7 @@ class Response extends AbstractMessage implements \Serializable
     {
         $fresh = $this->getFreshness();
 
-        return $fresh === null ? null : $fresh >= 0;
+        return $fresh === null ? null : $fresh > 0;
     }
 
     /**
@@ -845,7 +845,7 @@ class Response extends AbstractMessage implements \Serializable
         $maxAge = $this->getMaxAge();
         $age = $this->calculateAge();
 
-        return $maxAge && $age ? ($maxAge - $age) : null;
+        return is_int($maxAge) && is_int($age) ? ($maxAge - $age) : null;
     }
 
     /**
