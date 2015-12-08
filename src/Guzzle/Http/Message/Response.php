@@ -790,10 +790,15 @@ class Response extends AbstractMessage implements \Serializable
     {
         if ($header = $this->getHeader('Cache-Control')) {
             // s-max-age, then max-age, then Expires
-            if ($age = $header->getDirective('s-maxage')) {
+            $age = $header->getDirective('s-maxage');
+
+            if ($age !== null) {
                 return intval($age);
             }
-            if ($age = $header->getDirective('max-age')) {
+
+            $age = $header->getDirective('max-age');
+
+            if ($age !== null) {
                 return intval($age);
             }
         }
