@@ -238,7 +238,7 @@ class CachePlugin implements EventSubscriberInterface
         }
 
         // Check the response's max-age header
-        if ($response->isFresh() === false) {
+        if ($response->isFresh() !== true) {
             $maxStale = $reqc ? $reqc->getDirective('max-stale') : null;
             if (null !== $maxStale) {
                 if ($maxStale !== true && $response->getFreshness() < (-1 * $maxStale)) {
@@ -343,7 +343,7 @@ class CachePlugin implements EventSubscriberInterface
             $response->setHeader('X-Cache', $xcache);
         }
 
-        if ($response->isFresh() === false) {
+        if ($response->isFresh() !== true) {
             $response->addHeader('Warning', sprintf('110 GuzzleCache/%s "Response is stale"', Version::VERSION));
             if ($params['cache.hit'] === 'error') {
                 $response->addHeader('Warning', sprintf('111 GuzzleCache/%s "Revalidation failed"', Version::VERSION));
