@@ -43,7 +43,13 @@ class IoEmittingEntityBody extends AbstractEntityBodyDecorator implements HasDis
 
     public function dispatch($eventName, array $context = array())
     {
-        return $this->getEventDispatcher()->dispatch($eventName, new Event($context));
+        $dispatcher = $this->getEventDispatcher();
+
+        $event = new Event($context);
+        $event->setDispatcher($dispatcher);
+        $event->setName($eventName);
+
+        return $dispatcher->dispatch($eventName, $event);
     }
 
     /**

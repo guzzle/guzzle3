@@ -533,7 +533,13 @@ class Request extends AbstractMessage implements RequestInterface
     {
         $context['request'] = $this;
 
-        return $this->getEventDispatcher()->dispatch($eventName, new Event($context));
+        $dispatcher = $this->getEventDispatcher();
+
+        $event = new Event($context);
+        $event->setDispatcher($dispatcher);
+        $event->setName($eventName);
+
+        return $dispatcher->dispatch($eventName, $event);
     }
 
     public function addSubscriber(EventSubscriberInterface $subscriber)
@@ -585,8 +591,14 @@ class Request extends AbstractMessage implements RequestInterface
             // If the response is bad, allow listeners to modify it or throw exceptions. You can change the response by
             // modifying the Event object in your listeners or calling setResponse() on the request
             if ($this->response->isError()) {
+                $dispatcher = $this->getEventDispatcher();
+                $eventName = 'request.error';
+
                 $event = new Event($this->getEventArray());
-                $this->getEventDispatcher()->dispatch('request.error', $event);
+                $event->setDispatcher($dispatcher);
+                $event->setName($eventName);
+
+                $dispatcher->dispatch($eventName, $event);
                 // Allow events of request.error to quietly change the response
                 if ($event['response'] !== $this->response) {
                     $this->response = $event['response'];
