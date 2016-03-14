@@ -58,9 +58,9 @@ class CurlHandle
         // Array of default cURL options.
         $curlOptions = array(
             CURLOPT_URL            => $url,
-            CURLOPT_CONNECTTIMEOUT => 500,
-            CURLOPT_TIMEOUT_MS     => 500,
-            CURLOPT_TIMEOUT        => 500,
+            CURLOPT_CONNECTTIMEOUT => 1000,
+            CURLOPT_TIMEOUT_MS     => 1000,
+            CURLOPT_TIMEOUT        => 1000,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER         => false,
             CURLOPT_PORT           => $request->getPort(),
