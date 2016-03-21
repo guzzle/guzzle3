@@ -14,6 +14,21 @@ use Doctrine\Common\Cache\ArrayCache;
  */
 class DefaultCacheStorageTest extends \Guzzle\Tests\GuzzleTestCase
 {
+    /**
+     * As of Doctrine Cache 1.6.0 its' private "data" attribute
+     * values are arrays that contain the cached value and the
+     * cached value's lifetime instead of just the cached value
+     * itself.
+     */
+    protected static $doctrine_cache_gte_1_6_0;
+
+    public static function setUpBeforeClass()
+    {
+        static::$doctrine_cache_gte_1_6_0 =
+            class_exists('Doctrine\Common\Cache\Version')
+            && version_compare(\Doctrine\Common\Cache\Version::VERSION, '1.6.0', '>=');
+    }
+
     protected function getCache()
     {
         $a = new ArrayCache();
@@ -50,6 +65,11 @@ class DefaultCacheStorageTest extends \Guzzle\Tests\GuzzleTestCase
         $cache = $this->getCache();
         $foundRequest = $foundBody = $bodyKey = false;
         foreach ($this->readAttribute($cache['cache'], 'data') as $key => $v) {
+            // Doctrine Cache >= 1.6.0
+            if (static::$doctrine_cache_gte_1_6_0) {
+                $v = array_shift($v);
+            }
+
             if (strpos($v, 'foo.com')) {
                 $foundRequest = true;
                 $data = unserialize($v);
@@ -93,6 +113,11 @@ class DefaultCacheStorageTest extends \Guzzle\Tests\GuzzleTestCase
         $cache['storage']->cache($cache['request'], $response);
         $data = $this->readAttribute($cache['cache'], 'data');
         foreach ($data as $v) {
+            // Doctrine Cache >= 1.6.0
+            if (static::$doctrine_cache_gte_1_6_0) {
+                $v = array_shift($v);
+            }
+
             if (strpos($v, 'foo.com')) {
                 $u = unserialize($v);
                 $this->assertEquals(2, count($u));
@@ -146,6 +171,12 @@ class DefaultCacheStorageTest extends \Guzzle\Tests\GuzzleTestCase
     {
         $cache = $this->getCache();
         $data = $this->readAttribute($cache['cache'], 'data');
+        // Doctrine Cache >= 1.6.0
+        if (static::$doctrine_cache_gte_1_6_0) {
+            array_walk($data, function (&$value) {
+                $value = array_shift($value);
+            });
+        }
         $key = array_search('test', $data);
         $cache['cache']->delete(substr($key, 1, -4));
         $this->assertNull($cache['storage']->fetch($cache['request']));
@@ -174,6 +205,11 @@ class DefaultCacheStorageTest extends \Guzzle\Tests\GuzzleTestCase
         $cache['storage']->cache($request, $response);
         $data = $this->readAttribute($cache['cache'], 'data');
         foreach ($data as $v) {
+            // Doctrine Cache >= 1.6.0
+            if (static::$doctrine_cache_gte_1_6_0) {
+                $v = array_shift($v);
+            }
+
             if (strpos($v, 'foo.com')) {
                 $u = unserialize($v);
                 $this->assertGreaterThan($u[1][4], $u[0][4]);
