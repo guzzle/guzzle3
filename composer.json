@@ -65,7 +65,7 @@
     },
 
     "require-dev": {
-        "doctrine/cache": "~1.4",
+        "doctrine/cache": "~1.4,>=1.4.3",
         "symfony/class-loader": "~2.1",
         "monolog/monolog": "~1.0",
         "psr/log": "~1.0",
