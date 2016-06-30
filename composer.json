@@ -6,6 +6,8 @@
     "homepage": "http://guzzlephp.org/",
     "license": "MIT",
 
+    "abandoned": true,
+
     "authors": [
         {
             "name": "Michael Dowling",
