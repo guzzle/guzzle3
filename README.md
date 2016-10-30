@@ -2,6 +2,7 @@ Guzzle, PHP HTTP client and webservice framework
 ================================================
 
 # This is an old version of Guzzle
+[![This Project Has Been Deprecated.](http://www.repostatus.org/badges/0.1.0/abandoned.svg)](http://www.repostatus.org/#abandoned)
 
 This repository is for Guzzle 3.x. Guzzle 5.x, the new version of Guzzle, has
 been released and is available at
