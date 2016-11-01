@@ -44,7 +44,7 @@ class EntityBody extends Stream implements EntityBodyInterface
                 }
                 break;
             case 'array':
-                return self::fromString(http_build_query($resource));
+                return self::fromString(http_build_query($resource, '', '&'));
         }
 
         throw new InvalidArgumentException('Invalid resource type');
