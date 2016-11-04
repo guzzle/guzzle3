@@ -5,6 +5,7 @@ namespace Guzzle\Tests\Service\Command;
 use Guzzle\Service\Command\DefaultRequestSerializer;
 use Guzzle\Http\Message\EntityEnclosingRequest;
 use Guzzle\Service\Client;
+use Guzzle\Service\Command\LocationVisitor\Request\JsonVisitor;
 use Guzzle\Service\Description\ServiceDescription;
 use Guzzle\Service\Description\Operation;
 use Guzzle\Service\Description\Parameter;
@@ -118,5 +119,19 @@ class DefaultRequestSerializerTest extends \Guzzle\Tests\GuzzleTestCase
         $request = $command->prepare();
         $this->assertEquals('test', (string) $request->getHeader('bar'));
         $this->assertEquals('{"hello":"abc"}', (string) $request->getBody());
+    }
+
+    public function testAllowsDifferentVisitorsForDifferentObject()
+    {
+        $serializer1 = DefaultRequestSerializer::getInstance()->addVisitor('body', new JsonVisitor());
+        $serializer2 = DefaultRequestSerializer::getInstance();
+
+        $this->command['foo'] = 'bar';
+        $this->operation->addParam(new Parameter(array('name' => 'foo', 'location' => 'body')));
+        $request1 = $serializer1->prepare($this->command);
+        $request2 = $serializer2->prepare($this->command);
+
+        $this->assertEquals('{"foo":"bar"}', (string) $request1->getBody());
+        $this->assertEquals('bar', (string) $request2->getBody());
     }
 }
