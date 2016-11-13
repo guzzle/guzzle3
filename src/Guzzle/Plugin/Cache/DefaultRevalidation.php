@@ -52,6 +52,10 @@ class DefaultRevalidation implements RevalidationInterface
             return false;
         }
 
+        if ($request->getParams()->get('cache.revalidate') == 'never') {
+            return false;
+        }
+
         $reqCache = $request->getHeader('Cache-Control');
         $resCache = $response->getHeader('Cache-Control');
 
