@@ -563,12 +563,13 @@ class ResponseTest extends \Guzzle\Tests\GuzzleTestCase
 
         $response->setHeader('Cache-Control', 'max-age=120');
         $response->setHeader('Age', 100);
+
         $this->assertEquals(20, $response->getFreshness());
         $this->assertTrue($response->isFresh());
 
         $response->setHeader('Age', 120);
         $this->assertEquals(0, $response->getFreshness());
-        $this->assertTrue($response->isFresh());
+        $this->assertFalse($response->isFresh());
 
         $response->setHeader('Age', 150);
         $this->assertEquals(-30, $response->getFreshness());
