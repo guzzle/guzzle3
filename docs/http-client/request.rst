@@ -465,10 +465,9 @@ Here's an example of using request options:
 
 .. code-block:: php
 
-    $request = $this->client->get('http://example.com/large.mov', array(), array(
+    $request = $this->client->get('http://example.com/large.mov', array(
         'save_to' => '/tmp/large_file.mov'
     ));
-    $request->send();
     var_export(file_exists('/tmp/large_file.mov'));
     // >>> true
 
