@@ -7,10 +7,23 @@ php:
   - 5.6
   - hhvm
 
+env:
+  global:
+    - SYMFONY_VERSION="~2.1"
+
+matrix:
+  include:
+    - php: 5.5
+      env: SYMFONY_VERSION="~3.0"
+    - php: 5.6
+      env: SYMFONY_VERSION="~3.0"
+
 before_script:
   - curl --version
   - pecl install uri_template-beta || echo "pecl uri_template not available"
   - composer self-update
+  - composer require symfony/event-dispatcher:${SYMFONY_VERSION} --no-update
+  - composer require symfony/class-loader:${SYMFONY_VERSION} --no-update
   - composer install --no-interaction --prefer-source --dev
   - ~/.nvm/nvm.sh install v0.6.14
 
