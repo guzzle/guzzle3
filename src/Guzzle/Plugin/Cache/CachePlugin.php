@@ -10,7 +10,7 @@ use Guzzle\Common\Version;
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response;
 use Guzzle\Cache\DoctrineCacheAdapter;
-use Guzzle\Http\Exception\CurlException;
+use Guzzle\Http\Exception\RequestException;
 use Doctrine\Common\Cache\ArrayCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -254,7 +254,7 @@ class CachePlugin implements EventSubscriberInterface
         if ($this->revalidation->shouldRevalidate($request, $response)) {
             try {
                 return $this->revalidation->revalidate($request, $response);
-            } catch (CurlException $e) {
+            } catch (RequestException $e) {
                 $request->getParams()->set('cache.hit', 'error');
                 return $this->canResponseSatisfyFailedRequest($request, $response);
             }
