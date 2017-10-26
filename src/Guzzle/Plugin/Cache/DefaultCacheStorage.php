@@ -96,7 +96,7 @@ class DefaultCacheStorage implements CacheStorageInterface
             $currentTime + $ttl
         ));
 
-        $this->cache->save($key, serialize($entries));
+        $this->cache->save($key, serialize($entries), $this->getMaxEntriesTtl($entries, $currentTime));
     }
 
     public function delete(RequestInterface $request)
@@ -161,7 +161,7 @@ class DefaultCacheStorage implements CacheStorageInterface
             // Remove the entry from the metadata and update the cache
             unset($entries[$index]);
             if ($entries) {
-                $this->cache->save($key, serialize($entries));
+                $this->cache->save($key, serialize($entries), $this->getMaxEntriesTtl($entries));
             } else {
                 $this->cache->delete($key);
             }
@@ -262,5 +262,18 @@ class DefaultCacheStorage implements CacheStorageInterface
         $headers = array_map(function ($h) { return (string) $h; }, $headers);
 
         return $headers;
+    }
+
+    private function getMaxEntriesTtl($entries, $currentTime = null) {
+        if (is_null($currentTime)) {
+            $currentTime = time();
+        }
+        $max = 1; // we want these things to expire, 0 often means unlimited.
+
+        foreach ($entries as $entry) {
+            $max = max($entry[4] - $currentTime, $max);
+        }
+
+        return $max;
     }
 }
