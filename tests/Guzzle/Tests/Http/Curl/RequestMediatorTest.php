@@ -14,8 +14,10 @@ class RequestMediatorTest extends \Guzzle\Tests\GuzzleTestCase
 {
     public $events = array();
 
-    public function event($event)
+    public function event($event, $eventName)
     {
+        $event->__eventName = $eventName;
+
         $this->events[] = $event;
     }
 
@@ -37,17 +39,17 @@ class RequestMediatorTest extends \Guzzle\Tests\GuzzleTestCase
 
         $mediator->progress('a', 'b', 'c', 'd');
         $this->assertEquals(1, count($this->events));
-        $this->assertEquals('curl.callback.progress', $this->events[0]->getName());
+        $this->assertEquals('curl.callback.progress', $this->events[0]->__eventName);
 
         $this->assertEquals(3, $mediator->writeResponseBody('foo', 'bar'));
         $this->assertEquals(2, count($this->events));
-        $this->assertEquals('curl.callback.write', $this->events[1]->getName());
+        $this->assertEquals('curl.callback.write', $this->events[1]->__eventName);
         $this->assertEquals('bar', $this->events[1]['write']);
         $this->assertSame($request, $this->events[1]['request']);
 
         $this->assertEquals('foo', $mediator->readRequestBody('a', 'b', 3));
         $this->assertEquals(3, count($this->events));
-        $this->assertEquals('curl.callback.read', $this->events[2]->getName());
+        $this->assertEquals('curl.callback.read', $this->events[2]->__eventName);
         $this->assertEquals('foo', $this->events[2]['read']);
         $this->assertSame($request, $this->events[2]['request']);
     }
