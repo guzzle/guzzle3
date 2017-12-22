@@ -290,7 +290,6 @@ class BackoffPluginTest extends \Guzzle\Tests\GuzzleTestCase implements EventSub
             'request'    => $request,
             'curl_multi' => $multi
         ));
-        $event->setName(CurlMultiInterface::POLLING_REQUEST);
 
         return $event;
     }
